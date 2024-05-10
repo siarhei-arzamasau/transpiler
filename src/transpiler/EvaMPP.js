@@ -51,6 +51,13 @@ class EvaMPP {
       };
     }
 
+    if (this._isString(exp)) {
+      return {
+        type: 'StringLiteral',
+        value: exp.slice(1, -1),
+      };
+    }
+
     throw `Unexpected expression ${JSON.stringify(exp)}`;
   }
 
@@ -59,6 +66,13 @@ class EvaMPP {
    */
   _isNumber(exp) {
     return typeof exp === 'number';
+  }
+
+  /**
+   * Whether expression is a string.
+   */
+  _isString(exp) {
+    return typeof exp === 'string' && exp[0] === '"' && exp.slice(-1) === '"';
   }
 }
 

@@ -2,7 +2,7 @@ const { EvaMPP } = require('../src/transpiler/EvaMPP');
 
 const eva = new EvaMPP();
 
-const { ast, target } = eva.compile(42);
+const { ast, target } = eva.compile('"hello"');
 
 console.log('\n----------------------------------------');
 console.log(` 1. Compiled AST:\n`);

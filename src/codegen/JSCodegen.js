@@ -26,6 +26,13 @@ class JSCodegen {
   NumericLiteral(exp) {
     return `${exp.value}`;
   }
+
+  /**
+   * StringLiteral.
+   */
+  StringLiteral(exp) {
+    return `${exp.value}`;
+  }
 }
 
 module.exports = {
