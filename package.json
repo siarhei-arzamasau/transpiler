@@ -2,7 +2,7 @@
   "name": "transpiler",
   "version": "1.0.0",
   "description": "Eva MPP transpiler",
-  "main": "index.js",
+  "main": "./src/transpiler/EvaMPP.js",
   "scripts": {
     "test": "node"
   },
