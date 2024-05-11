@@ -6,11 +6,13 @@ const { ast, target } = eva.compile(`
 
   (var user-name "John")
 
-  // (print "user =" user-name)
+  (print "user =" user-name)
 
   (set user-name "Alex")
 
-  // (print "user =" user-name)
+  (print "user =" user-name)
+  
+  (print (Number "1"))
 
 `);
 
@@ -31,4 +33,4 @@ console.log(target);
 console.log('\n----------------------------------------');
 console.log(` 3. Result:\n`);
 
-// executed from ./compile-run.sh
+/* executed from ./compile-run.sh */

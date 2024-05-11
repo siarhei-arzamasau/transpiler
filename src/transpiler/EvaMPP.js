@@ -36,7 +36,14 @@ class EvaMPP {
    * Saves compiled code to file.
    */
   saveToFile(filename, code) {
-    fs.writeFileSync(filename, code, 'utf-8');
+    const out = `
+// Prologue:
+const { print } = require('./src/runtime');
+
+${code}
+`;
+
+    fs.writeFileSync(filename, out, 'utf-8');
   }
 
   /**
@@ -82,7 +89,7 @@ class EvaMPP {
     if (this._isVariableName(exp)) {
       return {
         type: 'Identifier',
-        name: exp,
+        name: this._toVariableName(exp),
       };
     }
 
@@ -124,6 +131,22 @@ class EvaMPP {
       return {
         type: 'BlockStatement',
         body,
+      };
+    }
+
+    // -------------------------------------------------------
+    // Function calls: (square 2)
+
+    if (Array.isArray(exp)) {
+      const fnName = this._toVariableName(exp[0]);
+
+      const callee = this.gen(fnName);
+      const args = exp.slice(1).map((arg) => this.gen(arg));
+
+      return {
+        type: 'CallExpression',
+        callee,
+        arguments: args,
       };
     }
 
@@ -173,6 +196,8 @@ class EvaMPP {
       case 'NumericLiteral':
       case 'StringLiteral':
       case 'AssignmentExpression':
+      case 'Identifier':
+      case 'CallExpression':
         return { type: 'ExpressionStatement', expression };
       default:
         return expression;

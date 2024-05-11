@@ -72,6 +72,15 @@ class JSCodegen {
   }
 
   /**
+   * CallExpression.
+   */
+  CallExpression(exp) {
+    const callee = this.gen(exp.callee);
+    const args = exp.arguments.map((arg) => this.gen(arg)).join(', ');
+    return `${callee}(${args})`;
+  }
+
+  /**
    * BlockStatement.
    */
   BlockStatement(exp) {
