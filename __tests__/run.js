@@ -8,7 +8,11 @@ const { ast, target } = eva.compile(`
 
   (var y (* 5 (+ x 10)))
 
-  // (print (- y)
+  (or (> x 0) (< x 100))
+  
+  (not x)
+
+  (print (- y))
 
 `);
 

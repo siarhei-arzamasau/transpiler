@@ -120,12 +120,52 @@ ${code}
     }
 
     // -------------------------------------------------------
+    // Unary expression.
+    if (this._isUnary(exp)) {
+      let operator = exp[0];
+
+      if (exp[0] === 'not') {
+        operator = '!';
+      }
+
+      return {
+        type: 'UnaryExpression',
+        operator,
+        argument: this.gen(exp[1]),
+      };
+    }
+
+    // -------------------------------------------------------
     // Binary expression.
     if (this._isBinary(exp)) {
       return {
         type: 'BinaryExpression',
         left: this.gen(exp[1]),
         operator: exp[0],
+        right: this.gen(exp[2]),
+      };
+    }
+
+    // -------------------------------------------------------
+    // Logical binary expression.
+    if (this._isLogicalBinary(exp)) {
+      let operator;
+
+      switch (exp[0]) {
+        case 'or':
+          operator = '||';
+          break;
+        case 'and':
+          operator = '&&';
+          break;
+        default:
+          throw `Unknown logical operator ${exp[0]}.`;
+      }
+
+      return {
+        type: 'LogicalExpression',
+        left: this.gen(exp[1]),
+        operator,
         right: this.gen(exp[2]),
       };
     }
@@ -201,6 +241,28 @@ ${code}
   }
 
   /**
+   * Whether the expression is logical.
+   */
+  _isLogicalBinary(exp) {
+    if (exp.length !== 3) {
+      return false;
+    }
+
+    return exp[0] === 'or' || exp[0] === 'and';
+  }
+
+  /**
+   * Whether the expression is unary.
+   */
+  _isUnary(exp) {
+    if (exp.length !== 2) {
+      return false;
+    }
+
+    return exp[0] === 'not' || exp[0] === '-';
+  }
+
+  /**
    * Converts dash-name (Eva) to camelCase (JS).
    */
   _toJSName(name) {
@@ -232,6 +294,8 @@ ${code}
       case 'Identifier':
       case 'CallExpression':
       case 'BinaryExpression':
+      case 'LogicalExpression':
+      case 'UnaryExpression':
         return { type: 'ExpressionStatement', expression };
       default:
         return expression;

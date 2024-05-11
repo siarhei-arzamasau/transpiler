@@ -98,6 +98,20 @@ class JSCodegen {
   }
 
   /**
+   * LogicalExpression.
+   */
+  LogicalExpression(exp) {
+    return `(${this.gen(exp.left)} ${exp.operator} ${this.gen(exp.right)})`;
+  }
+
+  /**
+   * UnaryExpression.
+   */
+  UnaryExpression(exp) {
+    return `${exp.operator}${this.gen(exp.argument)}`;
+  }
+
+  /**
    * BlockStatement.
    */
   BlockStatement(exp) {
