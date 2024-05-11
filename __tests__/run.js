@@ -4,15 +4,17 @@ const eva = new EvaMPP();
 
 const { ast, target } = eva.compile(`
 
-  (var x 32)
+  (var x 42)
 
-  (var y (* 5 (+ x 10)))
-
-  (or (> x 0) (< x 100))
-  
-  (not x)
-
-  (print (- y))
+  (if (== x 42)
+    (begin 
+      (set x 100)
+      (print "Universe"))
+    (begin 
+      (print "Unknown")
+    )
+    
+  )
 
 `);
 

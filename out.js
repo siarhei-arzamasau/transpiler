@@ -2,8 +2,10 @@
 // Prologue:
 const { print } = require('./src/runtime');
 
-let x = 32;
-let y = (5 * (x + 10));
-((x > 0) || (x < 100));
-!x;
-print(-y);
+let x = 42;
+if ((x === 42)) {
+  x = 100;
+  print("Universe");
+}  else {
+  print("Unknown");
+}

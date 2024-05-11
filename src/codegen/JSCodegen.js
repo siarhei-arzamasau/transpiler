@@ -98,6 +98,18 @@ class JSCodegen {
   }
 
   /**
+   * IfStatement.
+   */
+  IfStatement(exp) {
+    const test = this.gen(exp.test);
+    const consequent = this.gen(exp.consequent);
+
+    const alternate = exp.alternate != null ? ` else ${this.gen(exp.alternate)}` : '';
+
+    return `if (${test}) ${consequent} ${alternate}`;
+  }
+
+  /**
    * LogicalExpression.
    */
   LogicalExpression(exp) {

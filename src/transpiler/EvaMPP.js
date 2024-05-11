@@ -186,8 +186,18 @@ ${code}
     }
 
     // -------------------------------------------------------
-    // Function calls: (square 2)
+    // If statement: (if <test> <consequent> <alternate>)
+    if (exp[0] === 'if') {
+      return {
+        type: 'IfStatement',
+        test: this.gen(exp[1]),
+        consequent: this._toStatement(this.gen(exp[2])),
+        alternate: this._toStatement(this.gen(exp[3])),
+      };
+    }
 
+    // -------------------------------------------------------
+    // Function calls: (square 2)
     if (Array.isArray(exp)) {
       const fnName = this._toVariableName(exp[0]);
 
