@@ -4,17 +4,24 @@ const eva = new EvaMPP();
 
 const { ast, target } = eva.compile(`
 
-  (var x 42)
+  (var i 5)
 
-  (if (== x 42)
+  (while (> i 0)
     (begin 
-      (set x 100)
-      (print "Universe"))
-    (begin 
-      (print "Unknown")
+      (print "i =" i)
+      (set i (- i 1))  // TODO: (-- i) Syntactic sugar
     )
-    
   )
+
+  // TODO: (for (var i 5) (> i 0) (-- i) <body>)
+  // (begin
+  //   (var i 5)
+  //   (while (> i 0))
+  //      (begin
+  //        <body>
+  //        (set i (- i 1))
+  //      )
+  // )
 
 `);
 

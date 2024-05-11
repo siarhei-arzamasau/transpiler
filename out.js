@@ -2,10 +2,8 @@
 // Prologue:
 const { print } = require('./src/runtime');
 
-let x = 42;
-if ((x === 42)) {
-  x = 100;
-  print("Universe");
-}  else {
-  print("Unknown");
+let i = 5;
+while ((i > 0)) {
+  print("i =", i);
+  i = (i - 1);
 }

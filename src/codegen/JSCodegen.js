@@ -110,6 +110,13 @@ class JSCodegen {
   }
 
   /**
+   * WhileStatement.
+   */
+  WhileStatement(exp) {
+    return `while (${this.gen(exp.test)}) ${this.gen(exp.body)}`;
+  }
+
+  /**
    * LogicalExpression.
    */
   LogicalExpression(exp) {

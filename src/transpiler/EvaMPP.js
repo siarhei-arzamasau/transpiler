@@ -197,6 +197,16 @@ ${code}
     }
 
     // -------------------------------------------------------
+    // While loop
+    if (exp[0] === 'while') {
+      return {
+        type: 'WhileStatement',
+        test: this.gen(exp[1]),
+        body: this._toStatement(this.gen(exp[2])),
+      };
+    }
+
+    // -------------------------------------------------------
     // Function calls: (square 2)
     if (Array.isArray(exp)) {
       const fnName = this._toVariableName(exp[0]);
