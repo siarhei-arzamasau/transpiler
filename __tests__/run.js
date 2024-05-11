@@ -4,9 +4,13 @@ const eva = new EvaMPP();
 
 const { ast, target } = eva.compile(`
 
-  42
-  
-  "hello"
+  (var user-name "John")
+
+  // (print "user =" user-name)
+
+  (set user-name "Alex")
+
+  // (print "user =" user-name)
 
 `);
 

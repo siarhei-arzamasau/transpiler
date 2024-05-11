@@ -1,2 +1,2 @@
-42;
-"hello";
+let userName = "John";
+userName = "Alex";

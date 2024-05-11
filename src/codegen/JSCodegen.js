@@ -50,6 +50,28 @@ class JSCodegen {
   }
 
   /**
+   * Identifier.
+   */
+  Identifier(exp) {
+    return exp.name;
+  }
+
+  /**
+   * VariableDeclaration.
+   */
+  VariableDeclaration(exp) {
+    let { id, init } = exp.declarations[0];
+    return `let ${this.gen(id)} = ${this.gen(init)};`;
+  }
+
+  /**
+   * AssignmentExpression.
+   */
+  AssignmentExpression(exp) {
+    return `${this.gen(exp.left)} ${exp.operator} ${this.gen(exp.right)}`;
+  }
+
+  /**
    * BlockStatement.
    */
   BlockStatement(exp) {

@@ -78,6 +78,41 @@ class EvaMPP {
     }
 
     // -------------------------------------------------------
+    // Variable access: foo
+    if (this._isVariableName(exp)) {
+      return {
+        type: 'Identifier',
+        name: exp,
+      };
+    }
+
+    // -------------------------------------------------------
+    // Variables: (var x 10)
+    if (exp[0] === 'var') {
+      return {
+        type: 'VariableDeclaration',
+        declarations: [
+          {
+            type: 'VariableDeclarator',
+            id: this.gen(this._toVariableName(exp[1])),
+            init: this.gen(exp[2]),
+          },
+        ],
+      };
+    }
+
+    // -------------------------------------------------------
+    // Block.
+    if (exp[0] === 'set') {
+      return {
+        type: 'AssignmentExpression',
+        operator: '=',
+        left: this.gen(this._toVariableName(exp[1])),
+        right: this.gen(exp[2]),
+      };
+    }
+
+    // -------------------------------------------------------
     // Block.
     if (exp[0] === 'begin') {
       const [_tag, ...expressions] = exp;
@@ -93,6 +128,27 @@ class EvaMPP {
     }
 
     throw `Unexpected expression ${JSON.stringify(exp)}`;
+  }
+
+  /**
+   * Whether expression is a variable name.
+   */
+  _isVariableName(exp) {
+    return typeof exp === 'string' && /^[+\-*/<>=a-zA-Z0-9_\.]+$/.test(exp);
+  }
+
+  /**
+   * Converts an Eva variable name to JS format.
+   */
+  _toVariableName(exp) {
+    return this._toJSName(exp);
+  }
+
+  /**
+   * Converts dash-name (Eva) to camelCase (JS).
+   */
+  _toJSName(name) {
+    return name.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
   }
 
   /**
@@ -116,6 +172,7 @@ class EvaMPP {
     switch (expression.type) {
       case 'NumericLiteral':
       case 'StringLiteral':
+      case 'AssignmentExpression':
         return { type: 'ExpressionStatement', expression };
       default:
         return expression;
