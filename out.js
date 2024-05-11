@@ -2,8 +2,5 @@
 // Prologue:
 const { print } = require('./src/runtime');
 
-let userName = "John";
-print("user =", userName);
-userName = "Alex";
-print("user =", userName);
-print(Number("1"));
+let x = 32;
+let y = (5 * (x + 10));

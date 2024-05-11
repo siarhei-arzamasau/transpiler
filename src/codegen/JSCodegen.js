@@ -81,6 +81,23 @@ class JSCodegen {
   }
 
   /**
+   * BinaryExpression.
+   */
+  BinaryExpression(exp) {
+    let operator = exp.operator;
+
+    if (operator === '==') {
+      operator = '===';
+    }
+
+    if (operator === '!=') {
+      operator = '!==';
+    }
+
+    return `(${this.gen(exp.left)} ${operator} ${this.gen(exp.right)})`;
+  }
+
+  /**
    * BlockStatement.
    */
   BlockStatement(exp) {

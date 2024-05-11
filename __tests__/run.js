@@ -4,15 +4,11 @@ const eva = new EvaMPP();
 
 const { ast, target } = eva.compile(`
 
-  (var user-name "John")
+  (var x 32)
 
-  (print "user =" user-name)
+  (var y (* 5 (+ x 10)))
 
-  (set user-name "Alex")
-
-  (print "user =" user-name)
-  
-  (print (Number "1"))
+  // (print (- y)
 
 `);
 

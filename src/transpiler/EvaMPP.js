@@ -109,12 +109,23 @@ ${code}
     }
 
     // -------------------------------------------------------
-    // Block.
+    // Variable update: (set x 10)
     if (exp[0] === 'set') {
       return {
         type: 'AssignmentExpression',
         operator: '=',
         left: this.gen(this._toVariableName(exp[1])),
+        right: this.gen(exp[2]),
+      };
+    }
+
+    // -------------------------------------------------------
+    // Binary expression.
+    if (this._isBinary(exp)) {
+      return {
+        type: 'BinaryExpression',
+        left: this.gen(exp[1]),
+        operator: exp[0],
         right: this.gen(exp[2]),
       };
     }
@@ -168,6 +179,28 @@ ${code}
   }
 
   /**
+   * Whether the expression is a binary.
+   */
+  _isBinary(exp) {
+    if (exp.length !== 3) {
+      return false;
+    }
+
+    return (
+      exp[0] === '+' ||
+      exp[0] === '-' ||
+      exp[0] === '*' ||
+      exp[0] === '/' ||
+      exp[0] === '==' ||
+      exp[0] === '!=' ||
+      exp[0] === '>' ||
+      exp[0] === '>=' ||
+      exp[0] === '<' ||
+      exp[0] === '<='
+    );
+  }
+
+  /**
    * Converts dash-name (Eva) to camelCase (JS).
    */
   _toJSName(name) {
@@ -198,6 +231,7 @@ ${code}
       case 'AssignmentExpression':
       case 'Identifier':
       case 'CallExpression':
+      case 'BinaryExpression':
         return { type: 'ExpressionStatement', expression };
       default:
         return expression;
