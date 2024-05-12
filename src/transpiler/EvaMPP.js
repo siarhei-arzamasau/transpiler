@@ -227,6 +227,44 @@ ${code}
     }
 
     // -------------------------------------------------------
+    // Functions: (def square (x) (* x x))
+    if (exp[0] === 'def') {
+      const id = this.gen(this._toVariableName(exp[1]));
+
+      const params = exp[2].map((exp) => this.gen(exp));
+
+      let bodyExp = exp[3];
+
+      if (!this._hasBlock(bodyExp)) {
+        bodyExp = ['begin', bodyExp];
+      }
+
+      const last = bodyExp[bodyExp.length - 1];
+
+      if (!this._isStatement(last) && last[0] !== 'return') {
+        bodyExp[bodyExp.length - 1] = ['return', last];
+      }
+
+      const body = this.gen(bodyExp);
+
+      return {
+        type: 'FunctionDeclaration',
+        id,
+        params,
+        body,
+      };
+    }
+
+    // -------------------------------------------------------
+    // Return: (return x)
+    if (exp[0] === 'return') {
+      return {
+        type: 'ReturnStatement',
+        argument: this.gen(exp[1]),
+      };
+    }
+
+    // -------------------------------------------------------
     // Function calls: (square 2)
     if (Array.isArray(exp)) {
       const fnName = this._toVariableName(exp[0]);
@@ -256,6 +294,20 @@ ${code}
    */
   _toVariableName(exp) {
     return this._toJSName(exp);
+  }
+
+  /**
+   * Whether Eva node creates a block.
+   */
+  _hasBlock(exp) {
+    return exp[0] === 'begin';
+  }
+
+  /**
+   * Whether Eva node is a statement.
+   */
+  _isStatement(exp) {
+    return exp[0] === 'begin' || exp[0] === 'if' || exp[0] === 'while' || exp[0] === 'var';
   }
 
   /**

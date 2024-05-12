@@ -4,19 +4,29 @@ const eva = new EvaMPP();
 
 const { ast, target } = eva.compile(`
 
+  (def square (x) (* x x))
 
-`
-  // TODO Possible improvement for loop: (for (var i 5) (> i 0) (-- i) <body>)
-  // (begin
-  //   (var i 5)
-  //   (while (> i 0))
-  //      (begin
-  //        <body>
-  //        (set i (- i 1))
-  //      )
-  // )
+  (print (square 2)) // 4
 
-);
+  (def sum (a b)
+    (begin
+      (var c 30)
+      (* c (+ a b))
+    )
+  )
+
+  (print (sum 10 20)) // 900
+`);
+
+// TODO Possible improvement for loop: (for (var i 5) (> i 0) (-- i) <body>)
+// (begin
+//   (var i 5)
+//   (while (> i 0))
+//      (begin
+//        <body>
+//        (set i (- i 1))
+//      )
+// )
 
 console.log('\n----------------------------------------');
 console.log(` 1. Compiled AST:\n`);
