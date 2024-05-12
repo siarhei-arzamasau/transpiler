@@ -135,16 +135,24 @@ ${code}
       };
     }
 
-    // console.log(`expression: ${exp}`);
+    // -------------------------------------------------------
+    // Prefix Increment or decrement.
+    if (this._isPrefixUpdateExpression(exp)) {
+      return {
+        type: 'PrefixUpdateExpression',
+        operator: exp[0],
+        argument: this.gen(exp[1]),
+      };
+    }
 
     // -------------------------------------------------------
-    // Increment or decrement.
-    if (this._isUpdateExpression(exp)) {
+    // Postfix Increment or decrement.
+    if (this._isPostfixUpdateExpression(exp)) {
       return {
-        type: 'UpdateExpression',
+        type: 'PostfixUpdateExpression',
         operator: exp[1],
         argument: this.gen(exp[0]),
-      }
+      };
     }
 
     // -------------------------------------------------------
@@ -295,15 +303,28 @@ ${code}
   }
 
   /**
-   * Whether the expression is update: increment or decrement
+   * Whether the expression is prefix update: increment or decrement
    */
-  _isUpdateExpression(exp) {
+  _isPrefixUpdateExpression(exp) {
+    if (exp.length !== 2) {
+      return false;
+    }
+
+    if (exp[0] === '++' || exp[0] === '--') {
+      return true;
+    }
+  }
+
+  /**
+   * Whether the expression is postfix update: increment or decrement
+   */
+  _isPostfixUpdateExpression(exp) {
     if (exp.length !== 2) {
       return false;
     }
 
     if (exp[1] === '++' || exp[1] === '--') {
-      return true
+      return true;
     }
   }
 
@@ -341,7 +362,8 @@ ${code}
       case 'BinaryExpression':
       case 'LogicalExpression':
       case 'UnaryExpression':
-      case 'UpdateExpression':
+      case 'PrefixUpdateExpression':
+      case 'PostfixUpdateExpression':
         return { type: 'ExpressionStatement', expression };
       default:
         return expression;

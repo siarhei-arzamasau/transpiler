@@ -9,6 +9,8 @@ const { ast, target } = eva.compile(`
   (var j 10)
   (j ++)
   (print "j =" j)
+  (++ j)
+  (print "j =" j)
 
   (while (> i 0)
     (begin 

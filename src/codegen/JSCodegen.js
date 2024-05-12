@@ -131,9 +131,16 @@ class JSCodegen {
   }
 
   /**
-   * UpdateExpression
+   * PrefixUpdateExpression
    */
-  UpdateExpression(exp) {
+  PrefixUpdateExpression(exp) {
+    return `${exp.operator}${this.gen(exp.argument)}`;
+  }
+
+  /**
+   * PostfixUpdateExpression
+   */
+  PostfixUpdateExpression(exp) {
     return `${this.gen(exp.argument)}${exp.operator}`;
   }
 
