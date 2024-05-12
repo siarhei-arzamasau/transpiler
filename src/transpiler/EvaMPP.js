@@ -38,7 +38,7 @@ class EvaMPP {
   saveToFile(filename, code) {
     const out = `
 // Prologue:
-const { print } = require('./src/runtime');
+const { print, spawn } = require('./src/runtime');
 
 ${code}
 `;

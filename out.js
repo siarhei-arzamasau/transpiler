@@ -1,17 +1,14 @@
 
 // Prologue:
-const { print } = require('./src/runtime');
+const { print, spawn } = require('./src/runtime');
 
 
-function square(x) {
-  return (x * x)
+function handle(id) {
+  print(id, 1);
+  return print(id, 2)
 }
 
-print(square(2));
-
-function sum(a, b) {
-  let c = 30;
-  return (c * (a + b))
-}
-
-print(sum(10, 20));
+handle("x");
+handle("y");
+spawn(handle, "x");
+spawn(handle, "y");

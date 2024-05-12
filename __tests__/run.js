@@ -4,18 +4,24 @@ const eva = new EvaMPP();
 
 const { ast, target } = eva.compile(`
 
-  (def square (x) (* x x))
+  // Each function can be spawned as a process:
 
-  (print (square 2)) // 4
-
-  (def sum (a b)
+  (def handle (id)
     (begin
-      (var c 30)
-      (* c (+ a b))
+      (print id 1)
+      (print id 2)
     )
   )
 
-  (print (sum 10 20)) // 900
+  (handle "x") // x 1, x 2
+  (handle "y") // y 1, y 2
+
+  // Parallel execution:
+  //
+  // x 1, y 1, x 2, y 2, ...
+
+  (spawn handle "x")
+  (spawn handle "y")
 `);
 
 // TODO Possible improvement for loop: (for (var i 5) (> i 0) (-- i) <body>)
