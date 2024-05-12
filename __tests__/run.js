@@ -4,22 +4,9 @@ const eva = new EvaMPP();
 
 const { ast, target } = eva.compile(`
 
-  (var i 5)
 
-  (var j 10)
-  (j ++)
-  (print "j =" j)
-  (++ j)
-  (print "j =" j)
-
-  (while (> i 0)
-    (begin 
-      (print "i =" i)
-      (i --)
-    )
-  )
-
-  // TODO: (for (var i 5) (> i 0) (-- i) <body>)
+`
+  // TODO Possible improvement for loop: (for (var i 5) (> i 0) (-- i) <body>)
   // (begin
   //   (var i 5)
   //   (while (> i 0))
@@ -29,7 +16,7 @@ const { ast, target } = eva.compile(`
   //      )
   // )
 
-`);
+);
 
 console.log('\n----------------------------------------');
 console.log(` 1. Compiled AST:\n`);
