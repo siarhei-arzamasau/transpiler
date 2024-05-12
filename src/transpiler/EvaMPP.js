@@ -135,6 +135,18 @@ ${code}
       };
     }
 
+    // console.log(`expression: ${exp}`);
+
+    // -------------------------------------------------------
+    // Increment or decrement.
+    if (this._isUpdateExpression(exp)) {
+      return {
+        type: 'UpdateExpression',
+        operator: exp[1],
+        argument: this.gen(exp[0]),
+      }
+    }
+
     // -------------------------------------------------------
     // Binary expression.
     if (this._isBinary(exp)) {
@@ -283,6 +295,19 @@ ${code}
   }
 
   /**
+   * Whether the expression is update: increment or decrement
+   */
+  _isUpdateExpression(exp) {
+    if (exp.length !== 2) {
+      return false;
+    }
+
+    if (exp[1] === '++' || exp[1] === '--') {
+      return true
+    }
+  }
+
+  /**
    * Converts dash-name (Eva) to camelCase (JS).
    */
   _toJSName(name) {
@@ -316,6 +341,7 @@ ${code}
       case 'BinaryExpression':
       case 'LogicalExpression':
       case 'UnaryExpression':
+      case 'UpdateExpression':
         return { type: 'ExpressionStatement', expression };
       default:
         return expression;

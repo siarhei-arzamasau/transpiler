@@ -131,6 +131,13 @@ class JSCodegen {
   }
 
   /**
+   * UpdateExpression
+   */
+  UpdateExpression(exp) {
+    return `${this.gen(exp.argument)}${exp.operator}`;
+  }
+
+  /**
    * BlockStatement.
    */
   BlockStatement(exp) {

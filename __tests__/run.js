@@ -6,10 +6,14 @@ const { ast, target } = eva.compile(`
 
   (var i 5)
 
+  (var j 10)
+  (j ++)
+  (print "j =" j)
+
   (while (> i 0)
     (begin 
       (print "i =" i)
-      (set i (- i 1))  // TODO: (-- i) Syntactic sugar
+      (i --)
     )
   )
 
