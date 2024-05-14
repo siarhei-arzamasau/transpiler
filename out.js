@@ -1,6 +1,6 @@
 
 // Prologue:
-const { print, spawn } = require('./src/runtime');
+const { print, spawn, sleep, scheduler } = require('./src/runtime');
 
 
 function handle(id) {
