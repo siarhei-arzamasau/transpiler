@@ -13,8 +13,8 @@ const { ast, target } = eva.compile(`
     )
   )
 
-  (handle "x") // x 1, x 2
-  (handle "y") // y 1, y 2
+  // (handle "x") // x 1, x 2
+  // (handle "y") // y 1, y 2
 
   // Parallel execution:
   //

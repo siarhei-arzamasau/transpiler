@@ -1,6 +1,7 @@
 const evaParser = require('../parser/evaParser');
 
 const { JSCodegen } = require('../codegen/JSCodegen');
+const { JSTransform } = require('../transform/JSTransform');
 
 const fs = require('node:fs');
 
@@ -10,6 +11,11 @@ const fs = require('node:fs');
 const jsCodegen = new JSCodegen({ indent: 2 });
 
 /**
+ * JSTransform instance.
+ */
+const jsTransform = new JSTransform();
+
+/**
  * Eva MPP to JavaScript transpiler.
  */
 class EvaMPP {
@@ -17,6 +23,9 @@ class EvaMPP {
    * Compiles Eva MPP program to JavaScript.
    */
   compile(program) {
+    // Functions map.
+    this._functions = {};
+
     // 1. Parse source code:
     const evaAST = evaParser.parse(`(begin ${program})`);
 
@@ -53,9 +62,12 @@ ${code}
     // A program is a implicit (begin ...) block:
     const [_tag, ...expressions] = programBlock;
 
-    const body = [];
+    const prevBlock = this._currentBlock;
+    const body = (this._currentBlock = []);
 
     expressions.forEach((exp) => body.push(this._toStatement(this.gen(exp))));
+
+    this._currentBlock = prevBlock;
 
     return {
       type: 'Program',
@@ -195,9 +207,12 @@ ${code}
     if (exp[0] === 'begin') {
       const [_tag, ...expressions] = exp;
 
-      const body = [];
+      const prevBlock = this._currentBlock;
+      const body = (this._currentBlock = []);
 
       expressions.forEach((exp) => body.push(this._toStatement(this.gen(exp))));
+
+      this._currentBlock = prevBlock;
 
       return {
         type: 'BlockStatement',
@@ -247,12 +262,20 @@ ${code}
 
       const body = this.gen(bodyExp);
 
-      return {
+      const fn = {
         type: 'FunctionDeclaration',
         id,
         params,
         body,
       };
+
+      this._functions[id.name] = {
+        fn,
+        definingBlock: this._currentBlock,
+        index: this._currentBlock.length,
+      };
+
+      return fn;
     }
 
     // -------------------------------------------------------
@@ -271,6 +294,30 @@ ${code}
 
       const callee = this.gen(fnName);
       const args = exp.slice(1).map((arg) => this.gen(arg));
+
+      // Dynamically allocate a process function if the
+      // original function is used in the spawn(...) call:
+      if (callee.name === 'spawn') {
+        const fnName = args[0].name;
+        const processName = `_${fnName}`;
+
+        if (this._functions[processName] == null) {
+          // Create a process handler from the original function.
+          const processFn = jsTransform.functionToAsyncGenerator(this._functions[fnName].fn);
+
+          this._functions[processName] = {
+            ...this._functions[fnName],
+            fn: processFn,
+            index: this._functions[fnName].index + 1,
+          };
+
+          // And push ot to the same block where the
+          // original function is defined.
+          this._functions[fnName].definingBlock.splice(this._functions[processName].index, 0, processFn);
+
+          args[0].name = processName;
+        }
+      }
 
       return {
         type: 'CallExpression',
@@ -416,6 +463,7 @@ ${code}
       case 'UnaryExpression':
       case 'PrefixUpdateExpression':
       case 'PostfixUpdateExpression':
+      case 'YieldExpression':
         return { type: 'ExpressionStatement', expression };
       default:
         return expression;
