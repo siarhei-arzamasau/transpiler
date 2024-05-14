@@ -16,4 +16,4 @@ async function* _handle(id) {
 }
 
 spawn(_handle, "x");
-spawn(handle, "y");
+spawn(_handle, "y");

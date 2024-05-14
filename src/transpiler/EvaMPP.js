@@ -314,9 +314,8 @@ ${code}
           // And push ot to the same block where the
           // original function is defined.
           this._functions[fnName].definingBlock.splice(this._functions[processName].index, 0, processFn);
-
-          args[0].name = processName;
         }
+        args[0].name = processName;
       }
 
       return {
