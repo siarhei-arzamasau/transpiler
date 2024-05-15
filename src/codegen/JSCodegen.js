@@ -124,6 +124,25 @@ class JSCodegen {
   }
 
   /**
+   * ArrayExpression
+   */
+  ArrayExpression(exp) {
+    const elements = exp.elements.map((element) => this.gen(element));
+    return `[${elements.join(', ')}]`;
+  }
+
+  /**
+   * MemberExpression.
+   */
+  MemberExpression(exp) {
+    if (exp.computed) {
+      return `${this.gen(exp.object)}[${this.gen(exp.property)}]`;
+    }
+
+    return `${this.gen(exp.object)}.${this.gen(exp.property)}`;
+  }
+
+  /**
    * FunctionDeclaration
    */
   FunctionDeclaration(exp) {

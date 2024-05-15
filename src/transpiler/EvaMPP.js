@@ -288,6 +288,29 @@ ${code}
     }
 
     // -------------------------------------------------------
+    // List: (list 1 2 3)
+    if (exp[0] === 'list') {
+      const elements = exp.slice(1).map((element) => this.gen(element));
+
+      return {
+        type: 'ArrayExpression',
+        elements,
+      };
+    }
+
+    // -------------------------------------------------------
+    // List index: (idx p 0)
+
+    if (exp[0] === 'idx') {
+      return {
+        type: 'MemberExpression',
+        computed: true,
+        object: this.gen(exp[1]),
+        property: this.gen(exp[2]),
+      }
+    }
+
+    // -------------------------------------------------------
     // Function calls: (square 2)
     if (Array.isArray(exp)) {
       const fnName = this._toVariableName(exp[0]);
@@ -463,6 +486,8 @@ ${code}
       case 'PrefixUpdateExpression':
       case 'PostfixUpdateExpression':
       case 'YieldExpression':
+      case 'ArrayExpression':
+      case 'MemberExpression':
         return { type: 'ExpressionStatement', expression };
       default:
         return expression;

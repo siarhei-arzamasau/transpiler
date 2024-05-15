@@ -4,24 +4,38 @@ const eva = new EvaMPP();
 
 const { ast, target } = eva.compile(`
 
-  // Each function can be spawned as a process:
+  // Lists
 
-  (def handle (id)
-    (begin
-      (print id 1)
-      (print id 2)
-    )
-  )
+  (var data (list 1 2 3))
 
-  // (handle "x") // x 1, x 2
-  // (handle "y") // y 1, y 2
+  (idx data 0) // 1
 
-  // Parallel execution:
-  //
-  // x 1, y 1, x 2, y 2, ...
+  (print data (idx data 0))
 
-  (spawn handle "x")
-  (spawn handle "y")
+
+
+  // Records:
+
+  // (var z 3)
+
+  // (var point (rec (x 1) (y 2) z))
+
+  // (prop point x) // 1
+  
+
+
+
+
+  // Pattern matching:
+
+  // (var value (rec (x 1) (y 2)))
+
+  // (match value
+  // (rec (x 1) (y 2)) (print "x is 1")
+  //   (rec (x 1) y) (print "y is any")
+  //     _ "something else"
+  // )
+
 `);
 
 // TODO Possible improvement for loop: (for (var i 5) (> i 0) (-- i) <body>)
