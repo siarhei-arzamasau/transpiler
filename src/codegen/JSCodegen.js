@@ -124,6 +124,22 @@ class JSCodegen {
   }
 
   /**
+   * ObjectExpression.
+   */
+  ObjectExpression(exp) {
+    const properties = exp.properties.map((prop) => this.gen(prop));
+
+    return `{${properties.join(', ')}}`;
+  }
+
+  /**
+   * ObjectProperty.
+   */
+  ObjectProperty(exp) {
+    return `${this.gen(exp.key)}: ${this.gen(exp.value)}`;
+  }
+
+  /**
    * ArrayExpression
    */
   ArrayExpression(exp) {

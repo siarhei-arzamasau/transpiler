@@ -16,11 +16,13 @@ const { ast, target } = eva.compile(`
 
   // Records:
 
-  // (var z 3)
+  (var z 3)
 
-  // (var point (rec (x 1) (y 2) z))
+  (var point (rec (x 1) (y 2) z))
 
-  // (prop point x) // 1
+  (prop point x) // 1
+
+  (print point (prop point x))
   
 
 

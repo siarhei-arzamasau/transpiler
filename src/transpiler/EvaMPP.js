@@ -307,6 +307,45 @@ ${code}
         computed: true,
         object: this.gen(exp[1]),
         property: this.gen(exp[2]),
+      };
+    }
+
+    // -------------------------------------------------------
+    // Record: (rec (key value) key)
+
+    if (exp[0] === 'rec') {
+      const properties = exp.slice(1).map((entry) => {
+        let key;
+        let value;
+
+        if (Array.isArray(entry)) {
+          key = this.gen(entry[0]);
+          value = this.gen(entry[1]);
+        } else {
+          key = this.gen(entry);
+          value = key;
+        }
+
+        return {
+          type: 'ObjectProperty',
+          key,
+          value,
+        };
+      });
+
+      return {
+        type: 'ObjectExpression',
+        properties,
+      };
+    }
+
+    // -------------------------------------------------------
+    // Property access: (prop p x)
+    if (exp[0] === 'prop') {
+      return {
+        type: 'MemberExpression',
+        object: this.gen(exp[1]),
+        property: this.gen(exp[2]),
       }
     }
 
